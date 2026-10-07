@@ -1,0 +1,1174 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#07101f">
+  <meta name="description" content="Informatique Pro — plateforme étudiante de compétences, services, publications et groupes avec lecture intégrée des médias.">
+  <meta name="robots" content="index,follow">
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.json">
+
+  <title>Informatique Pro — Boostez votre activité</title>
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Informatique Pro">
+  <meta property="og:title" content="Informatique Pro — Boostez votre activité">
+  <meta property="og:description" content="Une plateforme étudiante pour présenter profils, compétences, services, publications et groupes.">
+  <meta property="og:image" content="assets/images/demo-banner.svg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Informatique Pro">
+  <meta name="twitter:description" content="Présentez vos compétences et vos services en tant qu'étudiant.">
+
+  <script type="application/ld+json">
+    {
+      "@context":"https://schema.org",
+      "@type":"Organization",
+      "name":"Informatique Pro",
+      "description":"Plateforme étudiante de compétences, services, publications et groupes.",
+      "url":"."
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    
+    :root{
+      --bg:#07101f;
+      --bg-2:#0b1730;
+      --surface:rgba(10,19,35,.76);
+      --surface-2:rgba(12,24,44,.92);
+      --line:rgba(255,255,255,.09);
+      --text:#eaf2ff;
+      --muted:#9eb0d3;
+      --accent:#5eead4;
+      --accent-2:#8ba8ff;
+      --danger:#ff8a95;
+      --shadow:0 24px 70px rgba(0,0,0,.34);
+      --max:1240px;
+      --radius:24px;
+      --radius-sm:16px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      color:var(--text);
+      font-family:"Manrope",sans-serif;
+      background:
+        radial-gradient(circle at 14% 20%, rgba(94,234,212,.10), transparent 24%),
+        radial-gradient(circle at 88% 8%, rgba(139,168,255,.12), transparent 28%),
+        linear-gradient(180deg,#06101d 0%,#08111f 38%,#0a1427 100%);
+      overflow-x:hidden;
+    }
+
+    h1,h2,h3,h4,.brand{
+      font-family:"Space Grotesk",sans-serif;
+      letter-spacing:-.03em;
+    }
+
+    a{color:inherit;text-decoration:none}
+    img,video,iframe{max-width:100%;display:block}
+    button,input{font:inherit}
+
+    .bg-orb,.bg-grid{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:-2;
+    }
+    .bg-orb::before,.bg-orb::after{
+      content:"";
+      position:absolute;
+      border-radius:50%;
+      filter:blur(48px);
+      opacity:.55;
+    }
+    .orb-a::before{
+      width:340px;height:340px;left:-70px;top:120px;
+      background:rgba(94,234,212,.10);
+    }
+    .orb-b::after{
+      width:420px;height:420px;right:-120px;top:-40px;
+      background:rgba(139,168,255,.14);
+    }
+    .bg-grid{
+      z-index:-3;
+      background-image:
+        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+      background-size:30px 30px;
+      mask-image:linear-gradient(180deg, rgba(0,0,0,.7), transparent 88%);
+    }
+
+    .glass{
+      background:var(--surface);
+      border:1px solid var(--line);
+      backdrop-filter:blur(16px);
+      -webkit-backdrop-filter:blur(16px);
+      box-shadow:var(--shadow);
+    }
+
+    .topbar{
+      width:min(calc(100% - 24px), var(--max));
+      margin:18px auto 0;
+      padding:14px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+      border-radius:20px;
+      position:sticky;
+      top:12px;
+      z-index:50;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:800;
+    }
+    .brand-mark{
+      width:38px;height:38px;
+      display:grid;
+      place-items:center;
+      border-radius:12px;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      color:#04111f;
+      box-shadow:0 12px 28px rgba(94,234,212,.22);
+      font-weight:900;
+    }
+    .brand-accent{color:var(--accent)}
+
+    .desktop-nav{
+      display:flex;
+      align-items:center;
+      gap:18px;
+      flex-wrap:wrap;
+    }
+    .desktop-nav a,
+    .mobile-menu a{
+      color:var(--muted);
+      transition:.22s ease;
+      position:relative;
+    }
+    .desktop-nav a:hover,
+    .mobile-menu a:hover{color:var(--text)}
+    .desktop-nav a::after{
+      content:"";
+      position:absolute;
+      left:0;bottom:-6px;
+      width:0;height:2px;
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      transition:.22s ease;
+    }
+    .desktop-nav a:hover::after{width:100%}
+
+    .icon-btn,.btn{
+      border:none;
+      cursor:pointer;
+      transition:.22s ease;
+    }
+    .icon-btn{
+      width:46px;height:46px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      border:1px solid var(--line);
+    }
+    .icon-btn:hover{transform:translateY(-2px)}
+    .menu-btn{display:none}
+
+    .mobile-menu{
+      width:min(calc(100% - 24px), var(--max));
+      margin:10px auto 0;
+      padding:12px;
+      display:none;
+      flex-direction:column;
+      gap:10px;
+      border-radius:18px;
+    }
+    .mobile-menu.open{display:flex}
+    .menu-admin{
+      padding-top:10px;
+      margin-top:6px;
+      border-top:1px solid var(--line);
+      color:var(--accent)!important;
+    }
+
+    main{
+      width:min(calc(100% - 24px), var(--max));
+      margin:0 auto;
+    }
+
+    .section{padding:56px 0}
+    .reveal{
+      opacity:0;
+      transform:translateY(26px);
+      transition:opacity .7s ease, transform .7s ease;
+    }
+    .reveal.visible{
+      opacity:1;
+      transform:none;
+    }
+
+    .hero{
+      min-height:calc(100vh - 120px);
+      display:grid;
+      grid-template-columns:1.15fr .85fr;
+      gap:28px;
+      align-items:center;
+      padding-top:28px;
+    }
+
+    .status-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      color:var(--muted);
+      margin-bottom:18px;
+    }
+
+    .pulse{
+      width:10px;height:10px;border-radius:50%;
+      background:var(--accent);
+      box-shadow:0 0 0 0 rgba(94,234,212,.65);
+      animation:pulse 1.8s infinite;
+    }
+    @keyframes pulse{
+      0%{box-shadow:0 0 0 0 rgba(94,234,212,.65)}
+      70%{box-shadow:0 0 0 14px rgba(94,234,212,0)}
+      100%{box-shadow:0 0 0 0 rgba(94,234,212,0)}
+    }
+
+    .hero h1{
+      font-size:clamp(2.4rem,7vw,5.4rem);
+      line-height:.94;
+      margin:0 0 18px;
+    }
+    .hero h1 span{
+      color:transparent;
+      background:linear-gradient(90deg,var(--accent),#d9e7ff 68%);
+      -webkit-background-clip:text;
+      background-clip:text;
+    }
+    .hero p{
+      color:var(--muted);
+      font-size:clamp(1rem,2vw,1.1rem);
+      line-height:1.75;
+      max-width:64ch;
+    }
+
+    .hero-actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:24px;
+    }
+
+    .btn{
+      min-height:52px;
+      padding:0 18px;
+      border-radius:16px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      font-weight:800;
+    }
+    .btn:hover{transform:translateY(-2px)}
+    .btn:active{transform:scale(.98)}
+    .btn-primary{
+      color:#04111f;
+      background:linear-gradient(135deg,var(--accent),#a2f3ec);
+      box-shadow:0 14px 34px rgba(94,234,212,.22);
+    }
+    .btn-secondary{
+      color:var(--text);
+      background:rgba(255,255,255,.06);
+      border:1px solid var(--line);
+    }
+
+    .mini-stats{
+      display:flex;
+      gap:26px;
+      flex-wrap:wrap;
+      margin-top:28px;
+    }
+    .mini-stats strong{
+      display:block;
+      font-size:1.5rem;
+      margin-bottom:4px;
+    }
+    .mini-stats small{color:var(--muted)}
+
+    .hero-card{
+      border-radius:30px;
+      padding:22px;
+      position:relative;
+      overflow:hidden;
+    }
+    .hero-card::before{
+      content:"";
+      position:absolute;
+      width:240px;height:240px;
+      right:-40px;bottom:-40px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(94,234,212,.16), transparent 64%);
+      pointer-events:none;
+    }
+    .hero-card-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      color:var(--muted);
+      font-size:.88rem;
+      margin-bottom:18px;
+    }
+    .live-dot{width:10px;height:10px;border-radius:50%;background:var(--accent)}
+    .avatar{
+      display:grid;
+      place-items:center;
+      border-radius:22px;
+      font-weight:900;
+      color:#04111f;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    }
+    .avatar-xl{
+      width:88px;height:88px;font-size:2rem;margin-bottom:16px
+    }
+    .skill-preview{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin:16px 0;
+    }
+    .tag{
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      color:var(--muted);
+      font-size:.92rem;
+    }
+    .text-link{
+      display:inline-block;
+      margin-top:16px;
+      color:var(--accent);
+      font-weight:700;
+    }
+
+    .section-heading{
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:20px;
+      align-items:end;
+      margin-bottom:22px;
+    }
+    .section-heading p{
+      margin:10px 0 0;
+      color:var(--muted);
+      max-width:64ch;
+      line-height:1.74;
+    }
+    .eyebrow{
+      display:inline-block;
+      margin-bottom:10px;
+      color:var(--accent);
+      letter-spacing:.22em;
+      font-size:.78rem;
+    }
+    .section-heading h2{
+      margin:0;
+      font-size:clamp(1.7rem,4vw,3rem);
+      line-height:1;
+    }
+    .section-heading h2 span{color:var(--accent)}
+
+    .toolbar{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      flex-wrap:wrap;
+      padding:14px;
+      border-radius:20px;
+      margin-bottom:20px;
+    }
+
+    .search-box{
+      flex:1 1 260px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:220px;
+      padding:14px 16px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.05);
+      color:var(--muted);
+    }
+    .search-box input{
+      width:100%;
+      background:transparent;
+      border:none;
+      outline:none;
+      color:var(--text);
+    }
+
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+    .chip{
+      border:none;
+      cursor:pointer;
+      padding:10px 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,.05);
+      color:var(--muted);
+      border:1px solid var(--line);
+    }
+    .chip.active{
+      color:var(--text);
+      background:rgba(94,234,212,.12);
+      border-color:rgba(94,234,212,.35);
+    }
+
+    .cards-grid,.posts-grid{
+      display:grid;
+      gap:18px;
+    }
+    .profiles-grid{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+    .services-grid{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+    .groups-grid{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+    .posts-grid{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+
+    .profile-card,.service-card,.group-card,.post-card,.cta-card{
+      border-radius:26px;
+      padding:20px;
+      background:var(--surface-2);
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      position:relative;
+      overflow:hidden;
+      transition:transform .28s ease, border-color .28s ease;
+    }
+    .profile-card:hover,.service-card:hover,.group-card:hover,.post-card:hover{
+      transform:translateY(-6px);
+      border-color:rgba(94,234,212,.28);
+    }
+
+    .profile-head{
+      display:flex;
+      gap:14px;
+      align-items:center;
+      margin-bottom:16px;
+    }
+    .avatar-md{
+      width:58px;height:58px;font-size:1.2rem;flex:none
+    }
+    .muted{color:var(--muted)}
+
+    .post-media{
+      width:100%;
+      aspect-ratio:16/10;
+      border-radius:18px;
+      overflow:hidden;
+      margin:14px 0 16px;
+      border:1px solid var(--line);
+      background:
+        linear-gradient(135deg, rgba(94,234,212,.14), rgba(139,168,255,.18)),
+        linear-gradient(180deg,#0d1832,#08101f);
+      display:grid;
+      place-items:center;
+      position:relative;
+    }
+    .post-media img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+    .post-media svg{
+      width:72px;
+      height:72px;
+      opacity:.88;
+      color:#eaf2ff;
+    }
+
+    .post-meta{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      color:var(--muted);
+      font-size:.92rem;
+      margin-top:14px;
+    }
+
+    .cta-card p{
+      max-width:64ch;
+      color:var(--muted);
+      line-height:1.75;
+      margin:14px 0 22px;
+    }
+
+    footer{
+      width:min(calc(100% - 24px), var(--max));
+      margin:0 auto 26px;
+      color:var(--muted);
+    }
+    .footer-inner{
+      padding-top:22px;
+      border-top:1px solid var(--line);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:20px;
+      flex-wrap:wrap;
+    }
+
+    .whatsapp-float{
+      position:fixed;
+      right:18px;
+      bottom:18px;
+      width:56px;height:56px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg,#22c55e,#86efac);
+      color:#05250f;
+      font-weight:900;
+      box-shadow:0 16px 40px rgba(34,197,94,.35);
+      z-index:35;
+    }
+
+    .viewer{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      background:rgba(3,8,17,.76);
+      backdrop-filter:blur(14px);
+      z-index:120;
+    }
+    .viewer.open{display:flex}
+    .viewer-shell{
+      width:min(1220px,100%);
+      height:min(92vh,920px);
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 320px;
+      gap:16px;
+    }
+    .viewer-main,.viewer-side{
+      background:rgba(9,16,31,.92);
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      min-height:0;
+      border-radius:28px;
+    }
+    .viewer-main{
+      display:grid;
+      grid-template-rows:auto 1fr;
+      overflow:hidden;
+    }
+    .viewer-bar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      padding:14px 16px;
+      border-bottom:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+    }
+    .viewer-title{
+      font-weight:800;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .viewer-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .viewer-btn{
+      min-height:42px;
+      padding:0 14px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .viewer-content{
+      overflow:auto;
+      padding:16px;
+      display:grid;
+      place-items:center;
+    }
+    .viewer-stage img,
+    .viewer-stage video,
+    .viewer-stage iframe{
+      max-width:100%;
+      max-height:70vh;
+      border-radius:18px;
+      border:1px solid var(--line);
+      background:#0b1324;
+    }
+    .viewer-doc{
+      width:100%;
+      height:70vh;
+      border:none;
+      border-radius:18px;
+      background:#fff;
+    }
+    .viewer-side{
+      padding:18px;
+      overflow:auto;
+    }
+    .viewer-side p{
+      color:var(--muted);
+      line-height:1.7;
+    }
+    .viewer-empty{
+      color:var(--muted);
+      text-align:center;
+      line-height:1.7;
+      max-width:56ch;
+    }
+
+    .tag-list{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+
+    .stagger > *{
+      animation:fadeUp .65s ease both;
+    }
+    .stagger > *:nth-child(1){animation-delay:.04s}
+    .stagger > *:nth-child(2){animation-delay:.08s}
+    .stagger > *:nth-child(3){animation-delay:.12s}
+    .stagger > *:nth-child(4){animation-delay:.16s}
+    .stagger > *:nth-child(5){animation-delay:.20s}
+    .stagger > *:nth-child(6){animation-delay:.24s}
+
+    @keyframes fadeUp{
+      from{opacity:0;transform:translateY(18px)}
+      to{opacity:1;transform:none}
+    }
+
+    .hidden{display:none!important}
+
+    @media (max-width:980px){
+      .hero{grid-template-columns:1fr}
+      .viewer-shell{grid-template-columns:1fr}
+      .viewer-side{order:-1}
+    }
+
+    @media (max-width:760px){
+      .desktop-nav{display:none}
+      .menu-btn{display:grid}
+      .section-heading{grid-template-columns:1fr}
+      .viewer-content{padding:10px}
+      .viewer-stage img,
+      .viewer-stage video,
+      .viewer-stage iframe,
+      .viewer-stage object,
+      .viewer-stage embed,
+      .viewer-doc{
+        max-height:58vh;
+        height:58vh;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-orb orb-a"></div>
+  <div class="bg-orb orb-b"></div>
+  <div class="bg-grid"></div>
+
+  <header class="topbar glass">
+    <a class="brand" href="#accueil" aria-label="Informatique Pro">
+      <span class="brand-mark">&lt;/&gt;</span>
+      <span>INFORMATIQUE<span class="brand-accent">.PRO</span></span>
+    </a>
+
+    <nav class="desktop-nav">
+      <a href="#accueil">Accueil</a>
+      <a href="#profils">Profils</a>
+      <a href="#services">Services</a>
+      <a href="#publications">Publications</a>
+      <a href="#groupes">Groupes</a>
+    </nav>
+
+    <button class="icon-btn menu-btn" id="menuBtn" aria-label="Ouvrir le menu">☰</button>
+  </header>
+
+  <div class="mobile-menu glass" id="mobileMenu">
+    <a href="#accueil">Accueil</a>
+    <a href="#profils">Profils</a>
+    <a href="#services">Services</a>
+    <a href="#publications">Publications</a>
+    <a href="#groupes">Groupes</a>
+    <a class="menu-admin" href="admin.html">Espace administrateur</a>
+  </div>
+
+  <main>
+    <section id="accueil" class="hero section reveal">
+      <div class="hero-copy">
+        <div class="status-pill"><span class="pulse"></span> Plateforme étudiante en ligne</div>
+        <h1>Boostez votre activité.<br><span>Montrez ce que vous savez faire.</span></h1>
+        <p class="hero-text">
+          Informatique Pro réunit des étudiants, leurs compétences, leurs services, leurs projets et leurs groupes dans une interface moderne.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#profils">Découvrir les profils <span>→</span></a>
+          <a class="btn btn-secondary" href="#services">Voir les services</a>
+        </div>
+        <div class="mini-stats">
+          <div><strong id="statProfiles">0</strong><small>Profils</small></div>
+          <div><strong id="statServices">0</strong><small>Services</small></div>
+          <div><strong id="statGroups">0</strong><small>Groupes</small></div>
+        </div>
+      </div>
+
+      <div class="hero-card glass">
+        <div class="hero-card-top">
+          <span>PROFIL EN VEDETTE</span>
+          <span class="live-dot"></span>
+        </div>
+        <div class="avatar avatar-xl" id="heroAvatar">?</div>
+        <h3 id="heroName">—</h3>
+        <p id="heroRole">Aucun profil pour l'instant</p>
+        <div class="skill-preview" id="heroSkills"></div>
+        <a href="#profils" class="text-link">Explorer les profils →</a>
+      </div>
+    </section>
+
+    <section id="profils" class="section reveal">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">COMMUNAUTÉ</span>
+          <h2>Choisissez avec qui <span>continuer.</span></h2>
+        </div>
+        <p>Chaque étudiant peut présenter son profil, ses compétences et ses services.</p>
+      </div>
+
+      <div class="toolbar glass">
+        <label class="search-box">⌕ <input id="profileSearch" type="search" placeholder="Rechercher un profil, une compétence..."></label>
+        <div class="chips" id="profileFilters"></div>
+      </div>
+
+      <div class="cards-grid profiles-grid stagger" id="profilesGrid"></div>
+    </section>
+
+    <section id="services" class="section reveal">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">CE QUE NOUS FAISONS</span>
+          <h2>Des services pour <span>faire avancer vos projets.</span></h2>
+        </div>
+      </div>
+      <div class="cards-grid services-grid stagger" id="servicesGrid"></div>
+    </section>
+
+    <section id="publications" class="section reveal">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">ACTUALITÉS</span>
+          <h2>Dernières <span>publications.</span></h2>
+          <p>
+            Les publications peuvent contenir des images, vidéos, documents et des liens ajoutés par l’administrateur.
+            Le visiteur peut lire le contenu directement dans la plateforme.
+          </p>
+        </div>
+        <button class="btn btn-secondary" id="randomPostBtn" type="button">Découvrir au hasard ↗</button>
+      </div>
+      <div class="posts-grid stagger" id="postsGrid"></div>
+    </section>
+
+    <section id="groupes" class="section reveal">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">COMMUNAUTÉ</span>
+          <h2>Rejoignez un <span>groupe.</span></h2>
+        </div>
+        <button class="btn btn-secondary" id="shuffleGroupsBtn" type="button">Groupes à découvrir ✦</button>
+      </div>
+      <div class="cards-grid groups-grid stagger" id="groupsGrid"></div>
+    </section>
+
+    <section class="cta section reveal">
+      <div class="cta-card glass">
+        <div>
+          <span class="eyebrow">VOUS ÊTES ÉTUDIANT ?</span>
+          <h2>Présentez vos compétences et développez votre activité.</h2>
+          <p>
+            Créez votre profil, ajoutez vos compétences, publiez vos services et participez aux groupes.
+          </p>
+          <a class="btn btn-primary" href="admin.html">Accéder à l'espace administrateur →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="brand">
+        <span class="brand-mark">&lt;/&gt;</span>
+        <span>INFORMATIQUE<span class="brand-accent">.PRO</span></span>
+      </div>
+      <p>Une vitrine numérique pour les étudiants et leurs activités.</p>
+      <a href="admin.html">Administration</a>
+    </div>
+    <small>© <span id="year"></span> Informatique Pro</small>
+  </footer>
+
+  <a class="whatsapp-float hidden" href="#" target="_blank" rel="noopener" aria-label="Contact WhatsApp" id="whatsappFloat">◔</a>
+  <div id="toast" class="toast"></div>
+
+  <div class="viewer" id="fileViewer" aria-hidden="true">
+    <div class="viewer-shell">
+      <div class="viewer-main">
+        <div class="viewer-bar">
+          <div class="viewer-title" id="viewerTitle">Lecture du fichier</div>
+          <div class="viewer-actions">
+            <a class="viewer-btn" id="viewerDownload" href="#" download>Télécharger</a>
+            <button class="viewer-btn" id="viewerOpenNew" type="button">Ouvrir seul</button>
+            <button class="viewer-btn" id="viewerClose" type="button">Fermer ✕</button>
+          </div>
+        </div>
+        <div class="viewer-content">
+          <div class="viewer-stage" id="viewerStage"></div>
+        </div>
+      </div>
+
+      <aside class="viewer-side">
+        <h3 id="viewerSideTitle">Titre du contenu</h3>
+        <p id="viewerDescription">Description du fichier publié.</p>
+
+        <div class="viewer-info">
+          <div><strong>Type</strong><div id="viewerType" class="muted">—</div></div>
+          <div style="margin-top:12px"><strong>Nom du fichier</strong><div id="viewerFileName" class="muted">—</div></div>
+          <div style="margin-top:12px"><strong>Publication</strong><div id="viewerPostName" class="muted">—</div></div>
+        </div>
+
+        <div class="tag-list" id="viewerTags"></div>
+        <div id="viewerLinkWrap" style="margin-top:18px"></div>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    const $ = (s,p=document) => p.querySelector(s);
+    const $$ = (s,p=document) => [...p.querySelectorAll(s)];
+
+    const STORAGE_KEY = "informatiqueProDataV2";
+
+    const fallbackData = {
+      profiles: [
+        { name:"Amina K.", role:"Développeuse Frontend", skills:["HTML","CSS","JavaScript"], bio:"Création d'interfaces modernes et responsives." }
+      ],
+      services: [
+        { title:"Création de sites", description:"Conception de sites web modernes." }
+      ],
+      groups: [
+        { name:"Frontend Lab", description:"Communauté autour du web." }
+      ],
+      posts: [
+        {
+          title:"Affiche événementielle",
+          excerpt:"Exemple de publication avec image.",
+          author:"Admin",
+          date:new Date().toISOString(),
+          tags:["Image","Design"],
+          media:{
+            type:"image",
+            title:"Affiche",
+            description:"Image publiée",
+            src:"assets/uploads/affiche.jpg"
+          },
+          link:{
+            label:"Voir la ressource",
+            url:"https://example.com"
+          }
+        }
+      ]
+    };
+
+    let data = loadData();
+
+    function loadData(){
+      try{
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(!raw) return structuredClone(fallbackData);
+        const parsed = JSON.parse(raw);
+        return {
+          profiles: Array.isArray(parsed.profiles) ? parsed.profiles : [],
+          services: Array.isArray(parsed.services) ? parsed.services : [],
+          groups: Array.isArray(parsed.groups) ? parsed.groups : [],
+          posts: Array.isArray(parsed.posts) ? parsed.posts : []
+        };
+      }catch{
+        return structuredClone(fallbackData);
+      }
+    }
+
+    function initials(name=""){
+      return name.split(" ").map(n => n[0]).slice(0,2).join("").toUpperCase() || "?";
+    }
+
+    function formatDate(date){
+      try{
+        return new Date(date).toLocaleDateString("fr-FR", {
+          day:"2-digit",
+          month:"short",
+          year:"numeric"
+        });
+      }catch{
+        return date;
+      }
+    }
+
+    function detectType(src=""){
+      const s = src.toLowerCase();
+      if(/\.(jpg|jpeg|png|gif|webp|svg)$/i.test(s)) return "image";
+      if(/\.(mp4|webm|ogg|mov)$/i.test(s)) return "video";
+      if(/\.pdf$/i.test(s)) return "pdf";
+      if(/\.(doc|docx|xls|xlsx|ppt|pptx|txt)$/i.test(s)) return "document";
+      return "file";
+    }
+
+    function showToast(message){
+      const toast = $("#toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(showToast.t);
+      showToast.t = setTimeout(() => toast.classList.remove("show"), 2400);
+    }
+
+    function mediaPreview(media={}, title=""){
+      const type = media.type || detectType(media.src || "");
+      if(type === "image" && media.src){
+        return `<div class="post-media"><img src="${media.src}" alt="${title}"></div>`;
+      }
+      if(type === "video"){
+        return `
+          <div class="post-media">
+            <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
+              <circle cx="32" cy="32" r="30" stroke="currentColor" stroke-width="2"></circle>
+              <path d="M26 20L46 32L26 44V20Z" fill="currentColor"></path>
+            </svg>
+          </div>
+        `;
+      }
+      return `
+        <div class="post-media">
+          <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
+            <path d="M20 8H37L50 21V52C50 54.2 48.2 56 46 56H20C17.8 56 16 54.2 16 52V12C16 9.8 17.8 8 20 8Z" stroke="currentColor" stroke-width="2"></path>
+            <path d="M36 8V22H50" stroke="currentColor" stroke-width="2"></path>
+            <path d="M24 34H40M24 42H40" stroke="currentColor" stroke-width="2"></path>
+          </svg>
+        </div>
+      `;
+    }
+
+    function renderHero(){
+      const p = data.profiles[0];
+      if(!p) return;
+      $("#heroAvatar").textContent = initials(p.name);
+      $("#heroName").textContent = p.name;
+      $("#heroRole").textContent = p.role;
+      $("#heroSkills").innerHTML = (p.skills || []).slice(0,4).map(s => `<span class="tag">${s}</span>`).join("");
+    }
+
+    function renderStats(){
+      $("#statProfiles").textContent = data.profiles.length;
+      $("#statServices").textContent = data.services.length;
+      $("#statGroups").textContent = data.groups.length;
+    }
+
+    function renderProfiles(){
+      $("#profilesGrid").innerHTML = data.profiles.map(p => `
+        <article class="profile-card">
+          <div class="profile-head">
+            <div class="avatar avatar-md">${initials(p.name)}</div>
+            <div>
+              <h3 style="margin:0">${p.name || "Sans nom"}</h3>
+              <div class="muted">${p.role || ""}</div>
+            </div>
+          </div>
+          <p class="muted">${p.bio || ""}</p>
+          <div class="skill-preview">
+            ${(p.skills || []).map(s => `<span class="tag">${typeof s === "string" ? s : `${s.name} ${s.level || ""}`}</span>`).join("")}
+          </div>
+        </article>
+      `).join("") || `<p class="muted">Aucun profil trouvé.</p>`;
+    }
+
+    function renderServices(){
+      $("#servicesGrid").innerHTML = data.services.map(s => `
+        <article class="service-card">
+          <span class="eyebrow">SERVICE</span>
+          <h3>${s.title || "Service"}</h3>
+          <p class="muted">${s.description || ""}</p>
+        </article>
+      `).join("") || `<p class="muted">Aucun service disponible.</p>`;
+    }
+
+    function renderGroups(items = data.groups){
+      $("#groupsGrid").innerHTML = items.map(g => `
+        <article class="group-card">
+          <span class="eyebrow">GROUPE</span>
+          <h3>${g.name || "Groupe"}</h3>
+          <p class="muted">${g.description || ""}</p>
+        </article>
+      `).join("") || `<p class="muted">Aucun groupe disponible.</p>`;
+    }
+
+    function buildViewerContent(post){
+      const media = post.media || {};
+      const src = media.src || "";
+      const type = media.type || detectType(src);
+
+      if(!src){
+        return `<div class="viewer-empty">Aucun fichier lié à cette publication.</div>`;
+      }
+      if(type === "image") return `<img src="${src}" alt="${media.title || post.title || "Image"}">`;
+      if(type === "video") return `<video controls playsinline preload="metadata"><source src="${src}"></video>`;
+      if(type === "pdf") return `<iframe class="viewer-doc" src="${src}" title="${media.title || post.title || "PDF"}"></iframe>`;
+      if(type === "document") return `<iframe class="viewer-doc" src="${src}" title="${media.title || post.title || "Document"}"></iframe>`;
+      return `<div class="viewer-empty">Prévisualisation indisponible pour ce fichier.</div>`;
+    }
+
+    function openViewer(post){
+      const media = post.media || {};
+      const src = media.src || "";
+      const type = media.type || detectType(src);
+
+      $("#viewerTitle").textContent = media.title || post.title || "Lecture du fichier";
+      $("#viewerSideTitle").textContent = media.title || post.title || "Contenu";
+      $("#viewerDescription").textContent = media.description || post.excerpt || "Prévisualisation du fichier publié.";
+      $("#viewerType").textContent = type;
+      $("#viewerFileName").textContent = src ? src.split("/").pop() : "—";
+      $("#viewerPostName").textContent = post.title || "—";
+      $("#viewerTags").innerHTML = (post.tags || []).map(t => `<span class="tag">${t}</span>`).join("");
+
+      $("#viewerLinkWrap").innerHTML = post.link?.url ? `
+        <a class="btn btn-secondary" href="${post.link.url}" target="_blank" rel="noopener">
+          ${post.link.label || "Ouvrir le lien"}
+        </a>
+      ` : "";
+
+      $("#viewerDownload").href = src || "#";
+      $("#viewerDownload").setAttribute("download", src ? src.split("/").pop() : "fichier");
+      $("#viewerOpenNew").onclick = () => { if(src) window.open(src, "_blank", "noopener"); };
+
+      $("#viewerStage").innerHTML = buildViewerContent(post);
+      $("#fileViewer").classList.add("open");
+      $("#fileViewer").setAttribute("aria-hidden","false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeViewer(){
+      $("#fileViewer").classList.remove("open");
+      $("#fileViewer").setAttribute("aria-hidden","true");
+      $("#viewerStage").innerHTML = "";
+      document.body.style.overflow = "";
+    }
+
+    function renderPosts(){
+      $("#postsGrid").innerHTML = data.posts.map((post, index) => {
+        const type = post.media?.type || detectType(post.media?.src || "");
+        return `
+          <article class="post-card">
+            <span class="tag">${type.toUpperCase()}</span>
+            <h3>${post.title || "Publication"}</h3>
+            <p class="muted">${post.excerpt || ""}</p>
+            ${mediaPreview(post.media, post.title)}
+            <div class="skill-preview">
+              ${(post.tags || []).map(t => `<span class="tag">${t}</span>`).join("")}
+            </div>
+            <div class="post-meta">
+              <span>Par ${post.author || "Administration"}</span>
+              <span>${formatDate(post.date || new Date())}</span>
+            </div>
+            <div class="hero-actions">
+              <button class="btn btn-primary open-media-btn" data-index="${index}" type="button">Lire maintenant</button>
+              ${post.link?.url ? `<a class="btn btn-secondary" href="${post.link.url}" target="_blank" rel="noopener">${post.link.label || "Ouvrir le lien"}</a>` : ""}
+              ${post.media?.src ? `<a class="btn btn-secondary" href="${post.media.src}" download>Télécharger</a>` : ""}
+            </div>
+          </article>
+        `;
+      }).join("") || `<p class="muted">Aucune publication disponible.</p>`;
+
+      $$(".open-media-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const post = data.posts[Number(btn.dataset.index)];
+          if(post) openViewer(post);
+        });
+      });
+    }
+
+    $("#menuBtn").addEventListener("click", () => $("#mobileMenu").classList.toggle("open"));
+    $("#randomPostBtn").addEventListener("click", () => {
+      if(!data.posts.length) return showToast("Aucune publication disponible");
+      openViewer(data.posts[Math.floor(Math.random() * data.posts.length)]);
+    });
+    $("#shuffleGroupsBtn").addEventListener("click", () => {
+      renderGroups([...data.groups].sort(() => Math.random() - 0.5));
+      showToast("Groupes mélangés");
+    });
+
+    $("#viewerClose").addEventListener("click", closeViewer);
+    $("#fileViewer").addEventListener("click", (e) => {
+      if(e.target === $("#fileViewer")) closeViewer();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if(e.key === "Escape") closeViewer();
+    });
+
+    $("#year").textContent = new Date().getFullYear();
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold:.12 });
+
+    $$(".reveal").forEach(el => observer.observe(el));
+
+    renderStats();
+    renderHero();
+    renderProfiles();
+    renderServices();
+    renderGroups();
+    renderPosts();
+  </script>
+</body>
+</html>

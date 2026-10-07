@@ -1,0 +1,1963 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0a1221">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Administration — Informatique Pro</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#0a1221;
+      --bg-2:#0f1830;
+      --panel:rgba(14,22,40,.82);
+      --panel-2:rgba(18,30,54,.92);
+      --line:rgba(255,255,255,.08);
+      --text:#ebf2ff;
+      --muted:#98a9c9;
+      --accent:#6ee7d8;
+      --accent-2:#89a8ff;
+      --danger:#ff7d8e;
+      --warning:#ffd76b;
+      --ok:#5ee08c;
+      --shadow:0 24px 80px rgba(0,0,0,.35);
+      --radius:26px;
+      --radius-sm:18px;
+      --max:1380px;
+      --ease:cubic-bezier(.16,1,.3,1);
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:"Inter",sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 12% 18%, rgba(110,231,216,.10), transparent 25%),
+        radial-gradient(circle at 88% 10%, rgba(137,168,255,.12), transparent 28%),
+        linear-gradient(180deg,#08111f 0%, #0a1221 42%, #0d1628 100%);
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+    h1,h2,h3,h4,.brand,.kpi-number{font-family:"Space Grotesk",sans-serif}
+    a{text-decoration:none;color:inherit}
+    button,input,textarea,select{font:inherit}
+    img{display:block;max-width:100%}
+
+    .bg-grid,.bg-noise{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:-2;
+    }
+    .bg-grid{
+      background-image:
+        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+      background-size:30px 30px;
+      mask-image:linear-gradient(180deg, rgba(0,0,0,.8), transparent 90%);
+    }
+    .bg-noise{
+      opacity:.14;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,.06) 0 1px, transparent 1px),
+        radial-gradient(circle at 80% 30%, rgba(255,255,255,.05) 0 1px, transparent 1px),
+        radial-gradient(circle at 40% 80%, rgba(255,255,255,.04) 0 1px, transparent 1px);
+      background-size:24px 24px, 28px 28px, 32px 32px;
+    }
+
+    .glass{
+      background:var(--panel);
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(18px);
+      -webkit-backdrop-filter:blur(18px);
+    }
+
+    .hidden{display:none !important}
+    .muted{color:var(--muted)}
+    .danger{color:var(--danger)}
+    .ok{color:var(--ok)}
+    .warning{color:var(--warning)}
+
+    .btn{
+      border:none;
+      cursor:pointer;
+      min-height:50px;
+      padding:0 18px;
+      border-radius:16px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      font-weight:800;
+      transition:transform .22s var(--ease), box-shadow .22s ease, background .22s ease, border-color .22s ease;
+      position:relative;
+      overflow:hidden;
+      white-space:nowrap;
+    }
+    .btn:hover{transform:translateY(-2px)}
+    .btn:active{transform:scale(.98)}
+    .btn::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(120deg, transparent 20%, rgba(255,255,255,.16), transparent 80%);
+      transform:translateX(-120%);
+      transition:transform .72s ease;
+      pointer-events:none;
+    }
+    .btn:hover::after{transform:translateX(120%)}
+    .btn-primary{
+      color:#04111f;
+      background:linear-gradient(135deg,var(--accent),#baf6ee);
+      box-shadow:0 18px 38px rgba(110,231,216,.18);
+    }
+    .btn-secondary{
+      color:var(--text);
+      background:rgba(255,255,255,.05);
+      border:1px solid var(--line);
+    }
+    .btn-danger{
+      color:#fff;
+      background:linear-gradient(135deg,#ff8b98,#ff5f74);
+    }
+    .btn-warning{
+      color:#261c00;
+      background:linear-gradient(135deg,#ffe089,#ffc65c);
+    }
+    .btn-ghost{
+      color:var(--muted);
+      background:transparent;
+      border:1px dashed var(--line);
+    }
+    .icon-btn{
+      width:48px;height:48px;flex:none;
+      border-radius:16px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.05);
+      color:var(--text);
+      cursor:pointer;
+      transition:.22s ease;
+    }
+    .icon-btn:hover{transform:translateY(-2px)}
+
+    input,textarea,select{
+      width:100%;
+      border:none;
+      outline:none;
+      color:var(--text);
+      background:rgba(255,255,255,.05);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px 16px;
+      transition:border-color .22s ease, box-shadow .22s ease, transform .22s ease;
+    }
+    textarea{resize:vertical;min-height:120px}
+    input:focus,textarea:focus,select:focus{
+      border-color:rgba(110,231,216,.38);
+      box-shadow:0 0 0 4px rgba(110,231,216,.08);
+      transform:translateY(-1px);
+    }
+    label{display:grid;gap:8px;font-weight:600}
+    small{font-size:.86rem}
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:9px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.05);
+      border:1px solid var(--line);
+      color:var(--muted);
+      font-size:.9rem;
+    }
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.05);
+      color:var(--muted);
+      font-size:.88rem;
+    }
+
+    .login-shell{
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      padding:24px;
+    }
+    .login-card{
+      width:min(560px,100%);
+      padding:30px;
+      border-radius:30px;
+      position:relative;
+      overflow:hidden;
+      animation:fadeUp .7s var(--ease);
+    }
+    .login-card::before{
+      content:"";
+      position:absolute;
+      width:280px;height:280px;
+      right:-90px;top:-90px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(110,231,216,.16), transparent 65%);
+      pointer-events:none;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:800;
+      margin-bottom:18px;
+    }
+    .brand-mark{
+      width:42px;height:42px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      color:#04111f;
+      font-weight:900;
+      box-shadow:0 16px 34px rgba(110,231,216,.18);
+    }
+    .eyebrow{
+      display:inline-block;
+      margin-bottom:12px;
+      color:var(--accent);
+      letter-spacing:.22em;
+      font-size:.78rem;
+      text-transform:uppercase;
+    }
+    .login-card h1{
+      margin:0 0 12px;
+      font-size:clamp(2rem,5vw,3.6rem);
+      line-height:.95;
+    }
+    .login-card p{
+      color:var(--muted);
+      line-height:1.75;
+      margin:0 0 18px;
+    }
+    .login-form{display:grid;gap:16px}
+    .login-note{
+      margin-top:16px;
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      color:var(--muted);
+      font-size:.9rem;
+    }
+
+    .app{
+      width:min(calc(100% - 24px), var(--max));
+      margin:18px auto;
+      display:grid;
+      grid-template-columns:300px minmax(0,1fr);
+      gap:18px;
+      align-items:start;
+    }
+
+    .sidebar{
+      padding:18px;
+      border-radius:28px;
+      position:sticky;
+      top:18px;
+      animation:fadeUp .7s var(--ease);
+    }
+    .userbox{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      padding:16px 0 18px;
+      border-bottom:1px solid var(--line);
+      margin-bottom:16px;
+    }
+    .avatar{
+      width:56px;height:56px;
+      border-radius:18px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      color:#04111f;
+      font-weight:900;
+      overflow:hidden;
+      flex:none;
+    }
+    .avatar img{width:100%;height:100%;object-fit:cover}
+    .nav{
+      display:grid;
+      gap:10px;
+      margin-top:12px;
+    }
+    .nav button{
+      width:100%;
+      min-height:48px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      color:var(--muted);
+      text-align:left;
+      padding:0 14px;
+      cursor:pointer;
+      transition:.22s ease;
+    }
+    .nav button:hover,.nav button.active{
+      color:var(--text);
+      background:rgba(110,231,216,.10);
+      border-color:rgba(110,231,216,.26);
+      transform:translateY(-1px);
+    }
+    .side-actions{
+      display:grid;
+      gap:10px;
+      margin-top:18px;
+    }
+
+    .main{
+      display:grid;
+      gap:18px;
+      min-width:0;
+    }
+    .topbar{
+      padding:18px 20px;
+      border-radius:28px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:18px;
+      animation:fadeUp .8s var(--ease);
+    }
+    .topbar h1{
+      margin:0;
+      font-size:clamp(1.6rem,3vw,2.8rem);
+      line-height:1;
+    }
+    .topbar p{margin:8px 0 0;color:var(--muted)}
+    .topbar-actions{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .tab{display:none}
+    .tab.active{display:block;animation:fadeUp .5s var(--ease)}
+
+    .grid-kpi{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:16px;
+      margin-bottom:18px;
+    }
+    .kpi{
+      border-radius:24px;
+      padding:20px;
+      position:relative;
+      overflow:hidden;
+      transition:.28s ease;
+    }
+    .kpi:hover{transform:translateY(-4px)}
+    .kpi::before{
+      content:"";
+      position:absolute;
+      width:160px;height:160px;
+      right:-50px;bottom:-50px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(110,231,216,.12), transparent 65%);
+      pointer-events:none;
+    }
+    .kpi-number{
+      font-size:2.3rem;
+      margin-top:10px;
+    }
+
+    .panel{
+      padding:22px;
+      border-radius:30px;
+      animation:fadeUp .72s var(--ease);
+    }
+    .panel-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:end;
+      gap:16px;
+      flex-wrap:wrap;
+      margin-bottom:18px;
+    }
+    .panel-head h2{
+      margin:0;
+      font-size:clamp(1.2rem,2.5vw,2rem);
+      line-height:1.04;
+    }
+    .panel-head p{margin:8px 0 0;color:var(--muted)}
+    .toolbar{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:18px;
+    }
+    .search{
+      flex:1 1 280px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:0 14px;
+      min-height:52px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.05);
+      color:var(--muted);
+    }
+    .search input{
+      border:none;
+      background:transparent;
+      box-shadow:none;
+      padding:0;
+    }
+
+    .form-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:16px;
+    }
+    .full{grid-column:1/-1}
+
+    .uploader{
+      display:grid;
+      grid-template-columns:120px minmax(0,1fr);
+      gap:16px;
+      align-items:center;
+      padding:16px;
+      border-radius:22px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+    }
+    .preview{
+      width:120px;height:120px;
+      border-radius:22px;
+      overflow:hidden;
+      display:grid;
+      place-items:center;
+      border:1px dashed rgba(255,255,255,.18);
+      background:rgba(255,255,255,.04);
+      color:var(--muted);
+      font-weight:800;
+    }
+    .preview img{width:100%;height:100%;object-fit:cover}
+    .stack{display:grid;gap:10px}
+    .inline{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+    .editor-list,.list{
+      display:grid;
+      gap:14px;
+      margin-top:18px;
+    }
+    .item{
+      padding:16px;
+      border-radius:22px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      transition:.28s ease;
+    }
+    .item:hover{
+      transform:translateY(-3px);
+      border-color:rgba(110,231,216,.22);
+      box-shadow:0 18px 46px rgba(0,0,0,.22);
+    }
+    .item-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .item-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .icon-picker{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .icon-choice{
+      width:52px;height:52px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      display:grid;
+      place-items:center;
+      background:rgba(255,255,255,.05);
+      cursor:pointer;
+      font-size:1.2rem;
+      transition:.22s ease;
+    }
+    .icon-choice:hover,.icon-choice.active{
+      transform:translateY(-2px);
+      background:rgba(110,231,216,.10);
+      border-color:rgba(110,231,216,.32);
+    }
+
+    .skill-row{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 150px auto;
+      gap:12px;
+      align-items:center;
+    }
+
+    .media-type-grid{
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:10px;
+    }
+    .media-btn{
+      min-height:52px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      color:var(--muted);
+      cursor:pointer;
+      transition:.22s ease;
+      font-weight:700;
+    }
+    .media-btn:hover,.media-btn.active{
+      color:var(--text);
+      background:rgba(110,231,216,.10);
+      border-color:rgba(110,231,216,.32);
+    }
+
+    .notice{
+      padding:16px;
+      border-radius:20px;
+      border:1px solid rgba(255,215,107,.18);
+      background:rgba(255,215,107,.08);
+      color:#ffe9aa;
+      line-height:1.7;
+    }
+
+    .table{
+      display:grid;
+      gap:12px;
+      margin-top:18px;
+    }
+    .profile-row{
+      padding:16px;
+      border-radius:22px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      display:grid;
+      gap:12px;
+    }
+    .profile-top{
+      display:flex;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+      align-items:flex-start;
+    }
+    .profile-info{
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+    }
+
+    .danger-zone{
+      border:1px solid rgba(255,125,142,.22);
+      background:rgba(255,125,142,.07);
+    }
+
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%) translateY(20px);
+      min-width:220px;
+      max-width:min(92vw,520px);
+      padding:14px 18px;
+      border-radius:16px;
+      color:var(--text);
+      background:rgba(7,14,26,.96);
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      opacity:0;
+      pointer-events:none;
+      transition:.28s ease;
+      z-index:300;
+    }
+    .toast.show{
+      opacity:1;
+      transform:translateX(-50%) translateY(0);
+    }
+
+    .modal{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      background:rgba(4,8,16,.72);
+      backdrop-filter:blur(12px);
+      z-index:250;
+    }
+    .modal.open{display:flex}
+    .modal-card{
+      width:min(560px,100%);
+      padding:24px;
+      border-radius:28px;
+      animation:fadeUp .3s var(--ease);
+    }
+
+    .reveal{
+      opacity:0;
+      transform:translateY(24px);
+      filter:blur(8px);
+      transition:opacity .8s var(--ease), transform .8s var(--ease), filter .8s var(--ease);
+    }
+    .reveal.visible{
+      opacity:1;
+      transform:none;
+      filter:none;
+    }
+
+    @keyframes fadeUp{
+      from{opacity:0;transform:translateY(18px)}
+      to{opacity:1;transform:none}
+    }
+
+    @media (max-width:1120px){
+      .app{grid-template-columns:1fr}
+      .sidebar{position:relative;top:auto}
+    }
+    @media (max-width:860px){
+      .grid-kpi{grid-template-columns:repeat(2,1fr)}
+      .form-grid{grid-template-columns:1fr}
+      .uploader{grid-template-columns:1fr}
+      .media-type-grid{grid-template-columns:repeat(2,1fr)}
+      .skill-row{grid-template-columns:1fr}
+    }
+    @media (max-width:560px){
+      .grid-kpi{grid-template-columns:1fr}
+      .login-card,.panel,.topbar,.sidebar,.modal-card{padding:18px}
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      *,*::before,*::after{animation:none!important;transition:none!important}
+      .reveal{opacity:1;transform:none;filter:none}
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="bg-noise"></div>
+
+  <section id="loginView" class="login-shell">
+    <div class="login-card glass">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">&lt;/&gt;</span>
+        <span>INFORMATIQUE<span style="color:var(--accent)">.PRO</span></span>
+      </a>
+
+      <span class="eyebrow">espace administrateur</span>
+      <h1>Gérez la plateforme avec un vrai contrôle.</h1>
+      <p>
+        Connectez-vous pour créer des profils, publier des contenus, gérer les services,
+        les groupes et administrer les comptes. La suppression de profil nécessite un code spécial.
+      </p>
+
+      <form id="loginForm" class="login-form">
+        <label>Nom d'utilisateur
+          <input id="loginName" required placeholder="ex. Moi">
+        </label>
+
+        <label>Code d'accès administrateur
+          <input id="loginCode" required type="password" placeholder="Code admin">
+        </label>
+
+        <button class="btn btn-primary" type="submit">Entrer dans le dashboard →</button>
+      </form>
+
+      <div class="login-note">
+        <span>Code admin par défaut : <strong></strong></span>
+        <a href="index.html">← Retour au site</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="appView" class="app hidden">
+    <aside class="sidebar glass reveal">
+      <div class="brand">
+        <span class="brand-mark">&lt;/&gt;</span>
+        <span>INFORMATIQUE<span style="color:var(--accent)">.PRO</span></span>
+      </div>
+
+      <div class="userbox">
+        <div class="avatar" id="sideAvatar">A</div>
+        <div>
+          <strong id="sideName">Admin</strong><br>
+          <small class="muted">Dashboard personnel</small>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <button data-tab="dashboard" class="active" type="button">▦ Tableau de bord</button>
+        <button data-tab="profile" type="button">◉ Mon profil</button>
+        <button data-tab="skills" type="button">◈ Compétences</button>
+        <button data-tab="posts" type="button">▤ Publications</button>
+        <button data-tab="services" type="button">⌁ Services</button>
+        <button data-tab="groups" type="button">◎ Groupes</button>
+        <button data-tab="profiles-admin" type="button">🛡 Gestion profils</button>
+        <button data-tab="settings" type="button">⚙ Paramètres</button>
+      </nav>
+
+      <div class="side-actions">
+        <a class="btn btn-secondary" href="index.html">Voir le site ↗</a>
+        <button id="logoutBtn" class="btn btn-danger" type="button">Déconnexion</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar glass reveal">
+        <div>
+          <span class="eyebrow">administration</span>
+          <h1 id="pageTitle">Tableau de bord</h1>
+          <p id="pageSubtitle">Pilotez profils, contenus et paramètres depuis une seule interface.</p>
+        </div>
+        <div class="topbar-actions">
+          <span class="pill" id="todayPill">—</span>
+          <button id="quickExportBtn" class="btn btn-secondary" type="button">Exporter</button>
+        </div>
+      </header>
+
+      <section id="tab-dashboard" class="tab active">
+        <div class="grid-kpi reveal">
+          <div class="kpi glass">
+            <small class="muted">Profils</small>
+            <div class="kpi-number" id="kpiProfiles">0</div>
+          </div>
+          <div class="kpi glass">
+            <small class="muted">Publications</small>
+            <div class="kpi-number" id="kpiPosts">0</div>
+          </div>
+          <div class="kpi glass">
+            <small class="muted">Services</small>
+            <div class="kpi-number" id="kpiServices">0</div>
+          </div>
+          <div class="kpi glass">
+            <small class="muted">Groupes</small>
+            <div class="kpi-number" id="kpiGroups">0</div>
+          </div>
+        </div>
+
+        <div class="panel glass reveal">
+          <div class="panel-head">
+            <div>
+              <span class="eyebrow">aperçu</span>
+              <h2>Votre présence actuelle</h2>
+              <p>Résumé de votre profil et de vos éléments publiés.</p>
+            </div>
+            <button class="btn btn-primary" data-tab-link="profile" type="button">Modifier mon profil</button>
+          </div>
+          <div id="dashboardPreview"></div>
+        </div>
+      </section>
+
+      <section id="tab-profile" class="tab">
+        <div class="panel glass reveal">
+          <div class="panel-head">
+            <div>
+              <span class="eyebrow">mon profil</span>
+              <h2>Identité et présentation</h2>
+              <p>Mettez à jour votre photo, votre bio, votre rôle et vos contacts.</p>
+            </div>
+          </div>
+
+          <form id="profileForm" class="form-grid">
+            <div class="full">
+              <label>Photo de profil</label>
+              <div class="uploader">
+                <div class="preview" id="photoPreview">?</div>
+                <div class="stack">
+                  <div class="inline">
+                    <label class="btn btn-secondary">
+                      Choisir une image
+                      <input id="photoFile" type="file" accept="image/*" hidden>
+                    </label>
+                    <button id="removePhotoBtn" class="btn btn-ghost" type="button">Retirer</button>
+                  </div>
+                  <small class="muted">JPG, PNG ou WebP. L’image est enregistrée dans le navigateur.</small>
+                </div>
+              </div>
+            </div>
+
+            <label>Nom affiché
+              <input id="profileName" required>
+            </label>
+
+            <label>Rôle / spécialité
+              <input id="profileRole" required placeholder="Développeur Web">
+            </label>
+
+            <label class="full">Présentation
+              <textarea id="profileBio" rows="5" required></textarea>
+            </label>
+
+            <label>Disponibilité
+              <select id="profileAvailability">
+                <option>Disponible</option>
+                <option>Occupé</option>
+                <option>En pause</option>
+              </select>
+            </label>
+
+            <label>WhatsApp (chiffres seulement)
+              <input id="profileWhatsApp" placeholder="2376XXXXXXXX" inputmode="numeric">
+            </label>
+
+            <div class="full inline">
+              <button class="btn btn-primary" type="submit">Enregistrer le profil</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section id="tab-skills" class="tab">
+        <div class="panel glass reveal">
+          <div class="panel-head">
+            <div>
+              <span class="eyebrow">compétences</span>
+              <h2>Ajouter des compétences</h2>
+              <p>Indiquez les niveaux pour enrichir votre profil public.</p>
+            </div>
+            <button id="addSkillBtn" class="btn btn-secondary" type="button">+ Ajouter</button>
+          </div>
+          <div id="skillsEditor" class="editor-list"></div>
+        </div>
+      </section>
+
+      <section id="tab-posts" class="tab">
+        <div class="panel glass reveal">
+          <div class="panel-head">
+            <div>
+              <span class="eyebrow">publications</span>
+              <h2>Créer une publication</h2>
+              <p>Ajoutez un média, un résumé, des tags et éventuellement un lien externe.</p>
+            </div>
+          </div>
+
+          <div class="notice">
+            Le visiteur pourra ouvrir le média directement depuis le site public. Vous pouvez publier une image,
+            une vidéo, un PDF, un document ou un simple fichier.
+          </div>
+
+          <form id="postForm" class="form-grid" style="margin-top:18px">
+            <label>Titre
+              <input id="postTitle" required>
+            </label>
+
+            <label>Catégorie
+              <input id="postCategory" value="Actualité" required>
+            </label>
+
+            <label>Auteur affiché
+              <input id="postAuthor" placeholder="Nom affiché dans la publication">
+            </label>
+
+            <label>Tags (séparés par des virgules)
+              <input id="postTags" placeholder="Ex. projet, design, frontend">
+            </label>
+
+            <div class="full">
+              <label>Type de média principal</label>
+              <div class="media-type-grid" id="mediaTypeGrid">
+                <button class="media-btn active" type="button" data-type="image">🖼 Image</button>
+                <button class="media-btn" type="button" data-type="video">▶ Vidéo</button>
+                <button class="media-btn" type="button" data-type="pdf">📄 PDF</button>
+                <button class="media-btn" type="button" data-type="document">🗂 Document</button>
+                <button class="media-btn" type="button" data-type="file">📎 Fichier</button>
+              </div>
+            </div>
+
+            <div class="full">
+              <label>Image de couverture (facultative)</label>
+              <div class="uploader">
+                <div class="preview" id="postCoverPreview">✦</div>
+                <div class="stack">
+                  <div class="inline">
+                    <label class="btn btn-secondary">
+                      Choisir une image
+                      <input id="postCoverFile" type="file" accept="image/*" hidden>
+                    </label>
+                    <button id="removePostCoverBtn" class="btn btn-ghost" type="button">Retirer</button>
+                  </div>
+                  <small class="muted">Affichée dans la carte publique si disponible.</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="full">
+              <label>Fichier principal</label>
+              <div class="uploader">
+                <div class="preview" id="postFilePreview">📁</div>
+                <div class="stack">
+                  <div class="inline">
+                    <label class="btn btn-secondary">
+                      Choisir un fichier
+                      <input id="postMediaFile" type="file" accept="image/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt" hidden>
+                    </label>
+                    <button id="removePostFileBtn" class="btn btn-ghost" type="button">Retirer</button>
+                  </div>
+                  <small id="postFileMeta" class="muted">Aucun fichier sélectionné.</small>
+                </div>
+              </div>
+            </div>
+
+            <label class="full">Lien externe (facultatif)
+              <input id="postLinkUrl" type="url" placeholder="https://...">
+            </label>
+
+            <label class="full">Texte du lien
+              <input id="postLinkLabel" placeholder="Voir le lien">
+            </label>
+
+            <label class="full">Résumé / extrait
+              <textarea id="postExcerpt" rows="4" required></textarea>
+            </label>
+
+            <label class="full">Description du média
+              <textarea id="postMediaDescription" rows="4"></textarea>
+            </label>
+
+            <label class="full">Contenu détaillé
+              <textarea id="postContent" rows="6"></textarea>
+            </label>
+
+            <div class="full inline">
+              <button class="btn btn-primary" type="submit">Publier maintenant</button>
+            </div>
+          </form>
+
+          <div id="myPosts" class="list"></div>
+        </div>
+      </section>
+
+      <section id="tab-services" class="tab">
+        <div class="panel glass reveal">
+          <div class="panel-head">
+            <div>
+              <span class="eyebrow">services</span>
+              <h2>Présenter vos offres</h2>
+              <p>Ajoutez des services visibles sur la page publique.</p>
+            </div>
+          </div>
+
+          <form id="serviceForm" class="form-grid">
+            <label>Nom du service
+              <input id="serviceTitle" required>
+            </label>
+
+            <label>Catégorie
+              <input id="serviceCategory" value="Numérique" required>
+            </label>
+
+            <div class="full">
+              <label>Icône</label>
+              <div class="icon-picker" id="serviceIconPicker"></div>
+            </div>
+
+            <label class="full">Description
+              <textarea id="serviceDescription" rows="4" required></textarea>
+            </label>
+
+            <div class="full inline">
+              <button class="btn btn-primary" type="submit">Ajouter le service</button>
+            </div>
+          </form>
+
+          <div id="myServices" class="list"></div>
+        </div>
+      </section>
+
+      <section id="tab-groups" class="tab">
+        <div class="panel glass reveal">
+          <div class="panel-head">
+            <div>
+              <span class="eyebrow">groupes</span>
+              <h2>Créer une communauté</h2>
+              <p>Ajoutez des groupes thématiques pour votre audience.</p>
+            </div>
+          </div>
+
+          <form id="groupForm" class="form-grid">
+            <label>Nom du groupe
+              <input id="groupName" required>
+            </label>
+
+            <label>Thème
+              <input id="groupTheme" required placeholder="HTML • CSS • JavaScript">
+            </label>
+
+            <div class="full">
+              <label>Icône</label>
+              <div class="icon-picker" id="groupIconPicker"></div>
+            </div>
+
+            <label class="full">Description
+              <textarea id="groupDescription" rows="4" required></textarea>
+            </label>
+
+            <div class="full inline">
+              <button class="btn btn-primary" type="submit">Créer le groupe</button>
+            </div>
+          </form>
+
+          <div id="myGroups" class="list"></div>
+        </div>
+      </section>
+
+      <section id="tab-profiles-admin" class="tab">
+        <div class="panel glass reveal">
+          <div class="panel-head">
+            <div>
+              <span class="eyebrow">gestion profils</span>
+              <h2>Contrôle administrateur des comptes</h2>
+              <p>Consultez tous les profils et supprimez-les uniquement avec le code spécial de suppression.</p>
+            </div>
+          </div>
+
+          <div class="notice">
+            La suppression d’un profil est une action sensible. Un <strong>code de suppression distinct</strong>
+            est demandé à chaque tentative. Vous pouvez supprimer seulement le profil ou tout son contenu lié.
+          </div>
+
+          <div class="toolbar" style="margin-top:18px">
+            <div class="search">
+              ⌕
+              <input id="profilesSearch" type="search" placeholder="Rechercher un profil, rôle ou compétence...">
+            </div>
+            <button id="refreshProfilesBtn" class="btn btn-secondary" type="button">Actualiser</button>
+          </div>
+
+          <div id="profilesAdminList" class="table"></div>
+        </div>
+      </section>
+
+      <section id="tab-settings" class="tab">
+        <div class="panel glass reveal">
+          <div class="panel-head">
+            <div>
+              <span class="eyebrow">paramètres</span>
+              <h2>Codes et configuration</h2>
+              <p>Modifiez le nom du site, le code d’accès admin et le code spécial de suppression.</p>
+            </div>
+          </div>
+
+          <form id="settingsForm" class="form-grid">
+            <label>Nom du site
+              <input id="setSiteName">
+            </label>
+
+            <label>Code d'accès admin
+              <input id="setAdminCode" required>
+            </label>
+
+            <label>Code spécial suppression
+              <input id="setDeleteCode" required>
+            </label>
+
+            <label class="full">Texte d'accroche
+              <textarea id="setTagline" rows="3"></textarea>
+            </label>
+
+            <div class="full inline">
+              <button class="btn btn-primary" type="submit">Enregistrer les paramètres</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="panel glass reveal danger-zone">
+          <div class="panel-head">
+            <div>
+              <span class="eyebrow">sauvegarde</span>
+              <h2>Exporter, importer, réinitialiser</h2>
+              <p>Les données sont stockées dans le navigateur via localStorage.</p>
+            </div>
+          </div>
+
+          <div class="inline">
+            <button id="exportBtn" class="btn btn-secondary" type="button">Exporter les données</button>
+            <label class="btn btn-secondary">
+              Importer un JSON
+              <input id="importFile" type="file" accept="application/json" hidden>
+            </label>
+            <button id="resetBtn" class="btn btn-danger" type="button">Réinitialiser</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </section>
+
+  <div id="deleteModal" class="modal" aria-hidden="true">
+    <div class="modal-card glass">
+      <span class="eyebrow">confirmation sécurisée</span>
+      <h3 style="margin:0 0 10px">Supprimer ce profil</h3>
+      <p class="muted" id="deleteModalText">
+        Entrez le code spécial de suppression pour confirmer cette action.
+      </p>
+
+      <form id="deleteConfirmForm" class="stack" style="margin-top:16px">
+        <label>Code spécial suppression
+          <input id="deleteConfirmCode" type="password" required placeholder="Code suppression">
+        </label>
+
+        <div class="inline">
+          <button class="btn btn-danger" type="submit">Confirmer la suppression</button>
+          <button id="closeDeleteModalBtn" class="btn btn-secondary" type="button">Annuler</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    (() => {
+      const $ = (s,p=document) => p.querySelector(s);
+      const $$ = (s,p=document) => [...p.querySelectorAll(s)];
+
+      const STORAGE_KEY = "informatiqueProDataV2";
+      const SESSION_KEY = "informatiqueProSessionV2";
+      const DEFAULT_ADMIN_CODE = "1234";
+      const DEFAULT_DELETE_CODE = "9999";
+      const ICONS = ["💻","🎨","📱","🧠","🛠️","🌐","📊","🎬","📄","👥","🚀","⚙️"];
+
+      let data = loadData();
+      let currentUser = loadSession();
+      let selectedServiceIcon = "💻";
+      let selectedGroupIcon = "👥";
+      let selectedMediaType = "image";
+      let pendingDeleteAction = null;
+
+      const drafts = {
+        profilePhoto:"",
+        postCover:"",
+        postFileSrc:"",
+        postFileName:"",
+        postFileType:""
+      };
+
+      function loadData(){
+        try{
+          return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
+            settings:{
+              siteName:"Informatique Pro",
+              adminCode:DEFAULT_ADMIN_CODE,
+              deleteCode:DEFAULT_DELETE_CODE,
+              tagline:"Boostez votre activité."
+            },
+            profiles:[],
+            services:[],
+            groups:[],
+            posts:[]
+          };
+        }catch{
+          return {
+            settings:{
+              siteName:"Informatique Pro",
+              adminCode:DEFAULT_ADMIN_CODE,
+              deleteCode:DEFAULT_DELETE_CODE,
+              tagline:"Boostez votre activité."
+            },
+            profiles:[],
+            services:[],
+            groups:[],
+            posts:[]
+          };
+        }
+      }
+
+      function saveData(){
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      }
+
+      function loadSession(){
+        try{return JSON.parse(localStorage.getItem(SESSION_KEY))}catch{return null}
+      }
+
+      function saveSession(session){
+        localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+      }
+
+      function clearSession(){
+        localStorage.removeItem(SESSION_KEY);
+      }
+
+      function showToast(message){
+        const toast = $("#toast");
+        toast.textContent = message;
+        toast.classList.add("show");
+        clearTimeout(showToast.t);
+        showToast.t = setTimeout(() => toast.classList.remove("show"), 2400);
+      }
+
+      function slugify(text=""){
+        return text
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g,"")
+          .replace(/[^a-z0-9]+/g,"-")
+          .replace(/^-+|-+$/g,"");
+      }
+
+      function initials(name=""){
+        return name.split(" ").map(n => n[0]).slice(0,2).join("").toUpperCase() || "?";
+      }
+
+      function formatDate(d){
+        return new Date(d).toLocaleDateString("fr-FR", {
+          day:"2-digit",
+          month:"short",
+          year:"numeric"
+        });
+      }
+
+      function detectMediaTypeFromFile(file){
+        if(!file) return "file";
+        if(file.type.startsWith("image/")) return "image";
+        if(file.type.startsWith("video/")) return "video";
+        if(file.type === "application/pdf") return "pdf";
+        if(/\.(doc|docx|xls|xlsx|ppt|pptx|txt)$/i.test(file.name)) return "document";
+        return "file";
+      }
+
+      function readFileAsDataURL(file){
+        return new Promise((resolve,reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      }
+
+      function ensureUserProfile(name){
+        const owner = slugify(name);
+        let profile = data.profiles.find(p => p.owner === owner);
+        if(profile) return profile;
+
+        profile = {
+          id:crypto.randomUUID(),
+          owner,
+          name,
+          role:"Étudiant",
+          bio:"",
+          availability:"Disponible",
+          whatsapp:"",
+          photo:"",
+          skills:[]
+        };
+
+        data.profiles.unshift(profile);
+        saveData();
+        return profile;
+      }
+
+      function currentProfile(){
+        if(!currentUser) return null;
+        return data.profiles.find(p => p.owner === currentUser.owner) || null;
+      }
+
+      function switchTab(tab){
+        $$(".nav button").forEach(btn => btn.classList.toggle("active", btn.dataset.tab === tab));
+        $$(".tab").forEach(section => section.classList.toggle("active", section.id === `tab-${tab}`));
+
+        const titles = {
+          dashboard:["Tableau de bord","Pilotez profils, contenus et paramètres depuis une seule interface."],
+          profile:["Mon profil","Mettez à jour votre identité et votre présentation."],
+          skills:["Compétences","Ajoutez des compétences et des niveaux visibles publiquement."],
+          posts:["Publications","Créez des contenus riches avec médias et liens."],
+          services:["Services","Présentez vos offres et savoir-faire."],
+          groups:["Groupes","Animez vos communautés et thématiques."],
+          "profiles-admin":["Gestion profils","Supervisez tous les comptes et sécurisez les suppressions."],
+          settings:["Paramètres","Configurez les codes et la sauvegarde du site."]
+        };
+        $("#pageTitle").textContent = titles[tab]?.[0] || "Administration";
+        $("#pageSubtitle").textContent = titles[tab]?.[1] || "";
+      }
+
+      function renderDashboard(){
+        $("#kpiProfiles").textContent = data.profiles.length;
+        $("#kpiPosts").textContent = data.posts.length;
+        $("#kpiServices").textContent = data.services.length;
+        $("#kpiGroups").textContent = data.groups.length;
+
+        const p = currentProfile();
+        $("#dashboardPreview").innerHTML = p ? `
+          <div class="item">
+            <div class="profile-info">
+              <div class="avatar" style="width:72px;height:72px;border-radius:22px">
+                ${p.photo ? `<img src="${p.photo}" alt="${p.name}">` : initials(p.name)}
+              </div>
+              <div>
+                <h3 style="margin:0 0 6px">${p.name || "Sans nom"}</h3>
+                <div class="muted">${p.role || "Étudiant"}</div>
+                <p class="muted" style="margin:10px 0 12px;line-height:1.75">${p.bio || "Complétez votre profil pour enrichir votre présence publique."}</p>
+                <div class="inline">
+                  ${(p.skills || []).map(skill => `<span class="tag">${typeof skill === "string" ? skill : `${skill.name} ${skill.level}%`}</span>`).join("") || `<span class="tag">Aucune compétence</span>`}
+                </div>
+              </div>
+            </div>
+          </div>
+        ` : `<p class="muted">Aucun profil actif.</p>`;
+      }
+
+      function renderProfileForm(){
+        const p = currentProfile();
+        if(!p) return;
+
+        $("#sideAvatar").innerHTML = p.photo ? `<img src="${p.photo}" alt="${p.name}">` : initials(p.name);
+        $("#sideName").textContent = p.name || "Admin";
+        $("#profileName").value = p.name || "";
+        $("#profileRole").value = p.role || "";
+        $("#profileBio").value = p.bio || "";
+        $("#profileAvailability").value = p.availability || "Disponible";
+        $("#profileWhatsApp").value = p.whatsapp || "";
+        $("#photoPreview").innerHTML = p.photo ? `<img src="${p.photo}" alt="${p.name}">` : initials(p.name);
+      }
+
+      function renderSkills(){
+        const p = currentProfile();
+        if(!p) return;
+
+        $("#skillsEditor").innerHTML = (p.skills || []).map((skill,index) => {
+          const s = typeof skill === "string" ? {name:skill, level:50} : skill;
+          return `
+            <div class="item">
+              <div class="skill-row">
+                <input value="${s.name}" data-index="${index}" data-field="name" placeholder="Nom de compétence">
+                <div>
+                  <input type="range" min="0" max="100" value="${s.level}" data-index="${index}" data-field="level">
+                  <small class="muted">${s.level}%</small>
+                </div>
+                <button class="btn btn-danger remove-skill-btn" type="button" data-index="${index}">Supprimer</button>
+              </div>
+            </div>
+          `;
+        }).join("") || `<p class="muted">Aucune compétence ajoutée.</p>`;
+
+        $$("input[data-field]", $("#skillsEditor")).forEach(input => {
+          input.addEventListener("input", e => {
+            const i = Number(e.target.dataset.index);
+            const field = e.target.dataset.field;
+            const value = field === "level" ? Number(e.target.value) : e.target.value;
+            if(typeof p.skills[i] === "string") p.skills[i] = {name:p.skills[i], level:50};
+            p.skills[i][field] = value;
+            saveData();
+            renderSkills();
+            renderDashboard();
+          });
+        });
+
+        $$(".remove-skill-btn").forEach(btn => {
+          btn.addEventListener("click", () => {
+            p.skills.splice(Number(btn.dataset.index),1);
+            saveData();
+            renderSkills();
+            renderDashboard();
+          });
+        });
+      }
+
+      function renderIconPicker(container, selected, callback){
+        container.innerHTML = ICONS.map(icon => `
+          <button class="icon-choice ${icon === selected ? "active" : ""}" type="button" data-icon="${icon}">${icon}</button>
+        `).join("");
+        $$(".icon-choice", container).forEach(btn => {
+          btn.addEventListener("click", () => callback(btn.dataset.icon));
+        });
+      }
+
+      function renderServices(){
+        const owner = currentUser?.owner;
+        const items = data.services.filter(s => s.owner === owner);
+
+        $("#myServices").innerHTML = items.map(item => `
+          <div class="item">
+            <div class="item-head">
+              <div>
+                <h3 style="margin:0 0 6px">${item.icon || "💻"} ${item.title}</h3>
+                <div class="muted">${item.category}</div>
+              </div>
+              <div class="item-actions">
+                <button class="btn btn-danger delete-service-btn" type="button" data-id="${item.id}">Supprimer</button>
+              </div>
+            </div>
+            <p class="muted">${item.description}</p>
+          </div>
+        `).join("") || `<p class="muted">Aucun service ajouté.</p>`;
+
+        $$(".delete-service-btn").forEach(btn => {
+          btn.addEventListener("click", () => {
+            data.services = data.services.filter(x => x.id !== btn.dataset.id);
+            saveData();
+            renderServices();
+            renderDashboard();
+            showToast("Service supprimé");
+          });
+        });
+      }
+
+      function renderGroups(){
+        const owner = currentUser?.owner;
+        const items = data.groups.filter(g => g.owner === owner);
+
+        $("#myGroups").innerHTML = items.map(item => `
+          <div class="item">
+            <div class="item-head">
+              <div>
+                <h3 style="margin:0 0 6px">${item.icon || "👥"} ${item.name}</h3>
+                <div class="muted">${item.theme}</div>
+              </div>
+              <div class="item-actions">
+                <button class="btn btn-danger delete-group-btn" type="button" data-id="${item.id}">Supprimer</button>
+              </div>
+            </div>
+            <p class="muted">${item.description}</p>
+          </div>
+        `).join("") || `<p class="muted">Aucun groupe ajouté.</p>`;
+
+        $$(".delete-group-btn").forEach(btn => {
+          btn.addEventListener("click", () => {
+            data.groups = data.groups.filter(x => x.id !== btn.dataset.id);
+            saveData();
+            renderGroups();
+            renderDashboard();
+            showToast("Groupe supprimé");
+          });
+        });
+      }
+
+      function mediaIcon(type){
+        return ({image:"🖼", video:"▶", pdf:"📄", document:"🗂", file:"📎"})[type] || "📎";
+      }
+
+      function renderPosts(){
+        const owner = currentUser?.owner;
+        const items = data.posts.filter(p => p.owner === owner);
+
+        $("#myPosts").innerHTML = items.map(item => `
+          <div class="item">
+            <div class="item-head">
+              <div>
+                <h3 style="margin:0 0 6px">${mediaIcon(item.media?.type)} ${item.title}</h3>
+                <div class="muted">${item.category} • ${formatDate(item.date)}</div>
+              </div>
+              <div class="item-actions">
+                ${item.link?.url ? `<a class="btn btn-secondary" href="${item.link.url}" target="_blank" rel="noopener">Lien</a>` : ""}
+                <button class="btn btn-danger delete-post-btn" type="button" data-id="${item.id}">Supprimer</button>
+              </div>
+            </div>
+            <p class="muted">${item.excerpt || ""}</p>
+            <div class="inline">
+              ${(item.tags || []).map(tag => `<span class="tag">${tag}</span>`).join("")}
+              <span class="tag">${item.media?.type || "file"}</span>
+            </div>
+          </div>
+        `).join("") || `<p class="muted">Aucune publication ajoutée.</p>`;
+
+        $$(".delete-post-btn").forEach(btn => {
+          btn.addEventListener("click", () => {
+            data.posts = data.posts.filter(x => x.id !== btn.dataset.id);
+            saveData();
+            renderPosts();
+            renderDashboard();
+            showToast("Publication supprimée");
+          });
+        });
+      }
+
+      function profileSkills(profile){
+        if(!Array.isArray(profile.skills)) return [];
+        return profile.skills.map(skill => {
+          if(typeof skill === "string") return skill;
+          return `${skill.name || "Compétence"}${skill.level ? " " + skill.level + "%" : ""}`;
+        });
+      }
+
+      function linkedCounts(owner){
+        return {
+          posts: data.posts.filter(i => i.owner === owner).length,
+          services: data.services.filter(i => i.owner === owner).length,
+          groups: data.groups.filter(i => i.owner === owner).length
+        };
+      }
+
+      function renderProfilesAdmin(filter=""){
+        const q = filter.trim().toLowerCase();
+        const items = data.profiles.filter(profile => {
+          const blob = [
+            profile.name,
+            profile.role,
+            profile.bio,
+            profile.owner,
+            ...profileSkills(profile)
+          ].join(" ").toLowerCase();
+          return !q || blob.includes(q);
+        });
+
+        $("#profilesAdminList").innerHTML = items.map(profile => {
+          const counts = linkedCounts(profile.owner);
+          const isCurrent = profile.owner === currentUser?.owner;
+          return `
+            <div class="profile-row">
+              <div class="profile-top">
+                <div class="profile-info">
+                  <div class="avatar">
+                    ${profile.photo ? `<img src="${profile.photo}" alt="${profile.name}">` : initials(profile.name)}
+                  </div>
+                  <div>
+                    <h3 style="margin:0 0 6px">${profile.name || "Sans nom"} ${isCurrent ? '<span class="tag">vous</span>' : ''}</h3>
+                    <div class="muted">${profile.role || "—"}</div>
+                    <div class="muted" style="margin-top:6px">Owner : ${profile.owner || "—"}</div>
+                    <p class="muted" style="margin:10px 0 12px;line-height:1.7">${profile.bio || "Aucune description."}</p>
+                    <div class="inline">
+                      <span class="tag">${counts.posts} publication(s)</span>
+                      <span class="tag">${counts.services} service(s)</span>
+                      <span class="tag">${counts.groups} groupe(s)</span>
+                      <span class="tag">${profile.availability || "Disponible"}</span>
+                    </div>
+                    <div class="inline" style="margin-top:10px">
+                      ${profileSkills(profile).map(skill => `<span class="tag">${skill}</span>`).join("") || `<span class="tag">Aucune compétence</span>`}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="item-actions">
+                  <button class="btn btn-warning delete-profile-btn" type="button" data-owner="${profile.owner}" data-mode="profile-only">
+                    Supprimer profil seul
+                  </button>
+                  <button class="btn btn-danger delete-profile-btn" type="button" data-owner="${profile.owner}" data-mode="full">
+                    Supprimer complètement
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join("") || `<p class="muted">Aucun profil trouvé.</p>`;
+
+        $$(".delete-profile-btn").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const owner = btn.dataset.owner;
+            const mode = btn.dataset.mode;
+            const profile = data.profiles.find(p => p.owner === owner);
+            if(!profile) return;
+
+            pendingDeleteAction = { owner, mode, name: profile.name || "ce profil" };
+            $("#deleteModalText").textContent =
+              mode === "full"
+                ? `Vous êtes sur le point de supprimer complètement "${profile.name}". Cette action supprimera le profil, ses publications, ses services et ses groupes. Entrez le code spécial de suppression.`
+                : `Vous êtes sur le point de supprimer seulement le profil "${profile.name}". Ses contenus liés resteront enregistrés. Entrez le code spécial de suppression.`;
+            $("#deleteConfirmCode").value = "";
+            $("#deleteModal").classList.add("open");
+            $("#deleteModal").setAttribute("aria-hidden","false");
+          });
+        });
+      }
+
+      function populateSettings(){
+        $("#setSiteName").value = data.settings.siteName || "Informatique Pro";
+        $("#setAdminCode").value = data.settings.adminCode || DEFAULT_ADMIN_CODE;
+        $("#setDeleteCode").value = data.settings.deleteCode || DEFAULT_DELETE_CODE;
+        $("#setTagline").value = data.settings.tagline || "";
+      }
+
+      function updatePostFileMeta(){
+        if(!drafts.postFileSrc){
+          $("#postFilePreview").textContent = "📁";
+          $("#postFileMeta").textContent = "Aucun fichier sélectionné.";
+          return;
+        }
+        $("#postFilePreview").textContent = mediaIcon(drafts.postFileType);
+        $("#postFileMeta").textContent = `${drafts.postFileName} • ${drafts.postFileType.toUpperCase()}`;
+      }
+
+      function setupImageUpload(inputSel, previewSel, removeSel, key, fallbackText){
+        const input = $(inputSel);
+        const preview = $(previewSel);
+        const removeBtn = $(removeSel);
+
+        input?.addEventListener("change", async e => {
+          const file = e.target.files?.[0];
+          if(!file) return;
+          const src = await readFileAsDataURL(file);
+          drafts[key] = src;
+          preview.innerHTML = `<img src="${src}" alt="Aperçu">`;
+          showToast("Image chargée");
+        });
+
+        removeBtn?.addEventListener("click", () => {
+          drafts[key] = "";
+          input.value = "";
+          preview.textContent = fallbackText;
+        });
+      }
+
+      function setupPostMediaUpload(){
+        $("#postMediaFile")?.addEventListener("change", async e => {
+          const file = e.target.files?.[0];
+          if(!file) return;
+          drafts.postFileSrc = await readFileAsDataURL(file);
+          drafts.postFileName = file.name;
+          drafts.postFileType = selectedMediaType || detectMediaTypeFromFile(file);
+          updatePostFileMeta();
+          showToast("Fichier chargé");
+        });
+
+        $("#removePostFileBtn")?.addEventListener("click", () => {
+          $("#postMediaFile").value = "";
+          drafts.postFileSrc = "";
+          drafts.postFileName = "";
+          drafts.postFileType = "";
+          updatePostFileMeta();
+        });
+      }
+
+      function bindEvents(){
+        $("#loginForm").addEventListener("submit", e => {
+          e.preventDefault();
+          const name = $("#loginName").value.trim();
+          const code = $("#loginCode").value.trim();
+          const adminCode = data.settings.adminCode || DEFAULT_ADMIN_CODE;
+
+          if(!name) return showToast("Entrez votre nom");
+          if(code !== adminCode) return showToast("Code admin incorrect");
+
+          ensureUserProfile(name);
+          currentUser = { name, owner: slugify(name) };
+          saveSession(currentUser);
+          openApp();
+          showToast("Connexion réussie");
+        });
+
+        $$(".nav button").forEach(btn => {
+          btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+        });
+
+        $$("[data-tab-link]").forEach(btn => {
+          btn.addEventListener("click", () => switchTab(btn.dataset.tabLink));
+        });
+
+        $("#logoutBtn").addEventListener("click", () => {
+          clearSession();
+          location.reload();
+        });
+
+        $("#profileForm").addEventListener("submit", e => {
+          e.preventDefault();
+          const p = currentProfile();
+          if(!p) return;
+
+          p.name = $("#profileName").value.trim();
+          p.role = $("#profileRole").value.trim();
+          p.bio = $("#profileBio").value.trim();
+          p.availability = $("#profileAvailability").value;
+          p.whatsapp = $("#profileWhatsApp").value.trim();
+          if(drafts.profilePhoto) p.photo = drafts.profilePhoto;
+
+          currentUser.name = p.name;
+          currentUser.owner = slugify(p.name);
+          p.owner = currentUser.owner;
+          saveSession(currentUser);
+          saveData();
+
+          renderProfileForm();
+          renderDashboard();
+          renderProfilesAdmin($("#profilesSearch")?.value || "");
+          showToast("Profil enregistré");
+        });
+
+        $("#addSkillBtn").addEventListener("click", () => {
+          const p = currentProfile();
+          if(!p) return;
+          p.skills.push({name:"Nouvelle compétence", level:50});
+          saveData();
+          renderSkills();
+          renderDashboard();
+        });
+
+        $("#serviceForm").addEventListener("submit", e => {
+          e.preventDefault();
+          data.services.unshift({
+            id:crypto.randomUUID(),
+            owner:currentUser.owner,
+            title:$("#serviceTitle").value.trim(),
+            category:$("#serviceCategory").value.trim(),
+            icon:selectedServiceIcon,
+            description:$("#serviceDescription").value.trim()
+          });
+          saveData();
+          e.target.reset();
+          renderServices();
+          renderDashboard();
+          showToast("Service ajouté");
+        });
+
+        $("#groupForm").addEventListener("submit", e => {
+          e.preventDefault();
+          data.groups.unshift({
+            id:crypto.randomUUID(),
+            owner:currentUser.owner,
+            name:$("#groupName").value.trim(),
+            theme:$("#groupTheme").value.trim(),
+            icon:selectedGroupIcon,
+            description:$("#groupDescription").value.trim()
+          });
+          saveData();
+          e.target.reset();
+          renderGroups();
+          renderDashboard();
+          showToast("Groupe créé");
+        });
+
+        $("#postForm").addEventListener("submit", e => {
+          e.preventDefault();
+
+          data.posts.unshift({
+            id:crypto.randomUUID(),
+            owner:currentUser.owner,
+            title:$("#postTitle").value.trim(),
+            category:$("#postCategory").value.trim(),
+            author:$("#postAuthor").value.trim() || currentUser.name,
+            excerpt:$("#postExcerpt").value.trim(),
+            content:$("#postContent").value.trim(),
+            date:new Date().toISOString(),
+            tags:$("#postTags").value.split(",").map(t => t.trim()).filter(Boolean),
+            coverImage:drafts.postCover || "",
+            media:{
+              type:drafts.postFileType || selectedMediaType,
+              title:$("#postTitle").value.trim(),
+              description:$("#postMediaDescription").value.trim(),
+              src:drafts.postFileSrc || "",
+              fileName:drafts.postFileName || ""
+            },
+            link:{
+              label:$("#postLinkLabel").value.trim() || "Voir le lien",
+              url:$("#postLinkUrl").value.trim()
+            }
+          });
+
+          saveData();
+          e.target.reset();
+          drafts.postCover = "";
+          drafts.postFileSrc = "";
+          drafts.postFileName = "";
+          drafts.postFileType = "";
+          $("#postCoverPreview").textContent = "✦";
+          updatePostFileMeta();
+          renderPosts();
+          renderDashboard();
+          showToast("Publication ajoutée");
+        });
+
+        $("#settingsForm").addEventListener("submit", e => {
+          e.preventDefault();
+          data.settings.siteName = $("#setSiteName").value.trim() || "Informatique Pro";
+          data.settings.adminCode = $("#setAdminCode").value.trim() || DEFAULT_ADMIN_CODE;
+          data.settings.deleteCode = $("#setDeleteCode").value.trim() || DEFAULT_DELETE_CODE;
+          data.settings.tagline = $("#setTagline").value.trim();
+          saveData();
+          showToast("Paramètres enregistrés");
+        });
+
+        $("#exportBtn").addEventListener("click", exportData);
+        $("#quickExportBtn").addEventListener("click", exportData);
+
+        $("#importFile").addEventListener("change", async e => {
+          const file = e.target.files?.[0];
+          if(!file) return;
+          try{
+            const imported = JSON.parse(await file.text());
+            data = {
+              settings:{
+                siteName:"Informatique Pro",
+                adminCode:DEFAULT_ADMIN_CODE,
+                deleteCode:DEFAULT_DELETE_CODE,
+                tagline:"",
+                ...(imported.settings || {})
+              },
+              profiles:Array.isArray(imported.profiles) ? imported.profiles : [],
+              services:Array.isArray(imported.services) ? imported.services : [],
+              groups:Array.isArray(imported.groups) ? imported.groups : [],
+              posts:Array.isArray(imported.posts) ? imported.posts : []
+            };
+            saveData();
+            location.reload();
+          }catch{
+            showToast("Import impossible");
+          }
+        });
+
+        $("#resetBtn").addEventListener("click", () => {
+          if(!confirm("Réinitialiser toutes les données ?")) return;
+          localStorage.removeItem(STORAGE_KEY);
+          localStorage.removeItem(SESSION_KEY);
+          location.reload();
+        });
+
+        $$(".media-btn").forEach(btn => {
+          btn.addEventListener("click", () => {
+            selectedMediaType = btn.dataset.type;
+            $$(".media-btn").forEach(b => b.classList.toggle("active", b === btn));
+          });
+        });
+
+        $("#profilesSearch").addEventListener("input", e => {
+          renderProfilesAdmin(e.target.value);
+        });
+
+        $("#refreshProfilesBtn").addEventListener("click", () => {
+          data = loadData();
+          renderProfilesAdmin($("#profilesSearch").value || "");
+          renderDashboard();
+          showToast("Liste actualisée");
+        });
+
+        $("#deleteConfirmForm").addEventListener("submit", e => {
+          e.preventDefault();
+          const entered = $("#deleteConfirmCode").value.trim();
+          const deleteCode = data.settings.deleteCode || DEFAULT_DELETE_CODE;
+
+          if(entered !== deleteCode){
+            showToast("Code spécial de suppression incorrect");
+            return;
+          }
+
+          if(!pendingDeleteAction) return;
+
+          const { owner, mode } = pendingDeleteAction;
+
+          data.profiles = data.profiles.filter(p => p.owner !== owner);
+
+          if(mode === "full"){
+            data.posts = data.posts.filter(item => item.owner !== owner);
+            data.services = data.services.filter(item => item.owner !== owner);
+            data.groups = data.groups.filter(item => item.owner !== owner);
+          }
+
+          saveData();
+
+          if(currentUser?.owner === owner){
+            clearSession();
+            showToast("Votre propre profil a été supprimé");
+            setTimeout(() => location.reload(), 900);
+            return;
+          }
+
+          closeDeleteModal();
+          renderProfilesAdmin($("#profilesSearch").value || "");
+          renderDashboard();
+          showToast(mode === "full" ? "Profil supprimé complètement" : "Profil supprimé");
+        });
+
+        $("#closeDeleteModalBtn").addEventListener("click", closeDeleteModal);
+        $("#deleteModal").addEventListener("click", e => {
+          if(e.target === $("#deleteModal")) closeDeleteModal();
+        });
+
+        document.addEventListener("keydown", e => {
+          if(e.key === "Escape") closeDeleteModal();
+        });
+      }
+
+      function closeDeleteModal(){
+        pendingDeleteAction = null;
+        $("#deleteConfirmCode").value = "";
+        $("#deleteModal").classList.remove("open");
+        $("#deleteModal").setAttribute("aria-hidden","true");
+      }
+
+      function exportData(){
+        const blob = new Blob([JSON.stringify(data,null,2)], {type:"application/json"});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "informatique-pro-backup.json";
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast("Export terminé");
+      }
+
+      function openApp(){
+        $("#loginView").classList.add("hidden");
+        $("#appView").classList.remove("hidden");
+
+        const p = currentProfile();
+        $("#todayPill").textContent = new Date().toLocaleDateString("fr-FR", {
+          weekday:"long", day:"2-digit", month:"long", year:"numeric"
+        });
+
+        $("#sideName").textContent = p?.name || currentUser?.name || "Admin";
+        $("#sideAvatar").innerHTML = p?.photo ? `<img src="${p.photo}" alt="${p.name}">` : initials(p?.name || currentUser?.name || "A");
+
+        renderDashboard();
+        renderProfileForm();
+        renderSkills();
+        renderPosts();
+        renderServices();
+        renderGroups();
+        renderProfilesAdmin();
+        populateSettings();
+        initPickers();
+        initReveal();
+      }
+
+      function initPickers(){
+        renderIconPicker($("#serviceIconPicker"), selectedServiceIcon, icon => {
+          selectedServiceIcon = icon;
+          initPickers();
+        });
+        renderIconPicker($("#groupIconPicker"), selectedGroupIcon, icon => {
+          selectedGroupIcon = icon;
+          initPickers();
+        });
+      }
+
+      function initReveal(){
+        const observer = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if(entry.isIntersecting){
+              entry.target.classList.add("visible");
+              observer.unobserve(entry.target);
+            }
+          });
+        }, {threshold:.12});
+
+        $$(".reveal").forEach(el => observer.observe(el));
+      }
+
+      setupImageUpload("#photoFile", "#photoPreview", "#removePhotoBtn", "profilePhoto", "?");
+      setupImageUpload("#postCoverFile", "#postCoverPreview", "#removePostCoverBtn", "postCover", "✦");
+      setupPostMediaUpload();
+      bindEvents();
+
+      if(currentUser){
+        ensureUserProfile(currentUser.name);
+        openApp();
+      }
+    })();
+  </script>
+</body>
+</html>

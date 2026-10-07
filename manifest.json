@@ -1,0 +1,12 @@
+{
+  "name": "Informatique Pro",
+  "short_name": "Info Pro",
+  "description": "Plateforme étudiante de compétences, services, publications et groupes.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#07101f",
+  "theme_color": "#07101f",
+  "icons": [
+    { "src": "assets/images/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
